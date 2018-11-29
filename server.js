@@ -1,3 +1,14 @@
+const { ApolloServer } = require('apollo-server-express')
+const typeDefs = require('./app/routes/graphql/typedef')
+const resolvers = require('./app/routes/graphql/resolvers')
+
+// this will auto make a path to /graphql
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  path: '/graphql'
+})
+
 // require necessary NPM packages
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -37,6 +48,9 @@ mongoose.connect(db, {
 
 // instantiate express application object
 const app = express()
+
+// ApolloServer
+server.applyMiddleware({ app })
 
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
