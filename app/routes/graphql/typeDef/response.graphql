@@ -1,0 +1,4 @@
+type Response {
+  status: String
+  message: String!
+}

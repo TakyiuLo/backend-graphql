@@ -1,11 +1,10 @@
 const { ApolloServer } = require('apollo-server-express')
-const typeDefs = require('./app/routes/graphql/typedef')
-const resolvers = require('./app/routes/graphql/resolvers')
+
+const schema = require('./app/routes/graphql/schema')
 
 // this will auto make a path to /graphql
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
   path: '/graphql'
 })
 

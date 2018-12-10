@@ -1,0 +1,7 @@
+type Recipe {
+  name: String!
+}
+
+type Query {
+  recipes: [Recipe!]
+}
