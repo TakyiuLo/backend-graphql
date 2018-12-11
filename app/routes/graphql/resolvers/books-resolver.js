@@ -6,7 +6,7 @@ const handle404 = customErrors.handle404
 const { replaceID } = require('../custom-fn')
 
 // INDEX
-function getBooks (root, args, context, info) {
+function getBooks (parent, args, context, info) {
   let query = replaceID(args)
 
   return Book.find(query)
@@ -14,20 +14,20 @@ function getBooks (root, args, context, info) {
 }
 
 // SHOW
-function getBook (root, args, context, info) {
+function getBook (parent, args, context, info) {
   return Book.findById(args.id)
     .then(handle404)
     .catch(handle)
 }
 
 // CREATE
-function createBook (root, args, context, info) {
+function createBook (parent, args, context, info) {
   return Book.create(args)
     .catch(handle)
 }
 
 // UPDATE
-function updateBook (root, args, context, info) {
+function updateBook (parent, args, context, info) {
   function removeEmptyStringKeys (res) {
     Object.keys(args).forEach(key => {
       if (args[key] === '') {
@@ -46,7 +46,7 @@ function updateBook (root, args, context, info) {
 }
 
 // DELETE
-function deleteBook (root, args, context, info) {
+function deleteBook (parent, args, context, info) {
   function successResponse () {
     return {
       status: '200',
