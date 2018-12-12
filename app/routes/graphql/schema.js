@@ -11,14 +11,12 @@ function makeSchema (typeDefName, resolverName) {
 }
 
 // list of schemas that wanted to merge
-const bookSchema = makeSchema('books.graphql', 'books-resolver')
 const userSchema = makeSchema('users.graphql', 'users-resolver')
 const exampleSchema = makeSchema('examples.graphql', 'examples-resolver')
 
 // merge schemas
 const schema = mergeSchemas({
   schemas: [
-    bookSchema,
     userSchema,
     exampleSchema
   ]
