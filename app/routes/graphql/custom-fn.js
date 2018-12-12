@@ -53,11 +53,16 @@ function plog (obj) {
  */
 const User = require('../../models/user')
 const handle = require('../../../lib/error_handler')
-const { handleUser } = require('../../../lib/custom_errors')
+const { handleUser, BadParamsError } = require('../../../lib/custom_errors')
 
 function requireToken (resolver, [parent, args, context, info]) {
   const req = context
-  const [authType, token] = req.headers.authorization.split(' ')
+  const auth = req.headers.authorization
+  // check if authorization exists
+  if (!auth) {
+    throw new BadParamsError()
+  }
+  const [authType, token] = auth.split(' ')
 
   console.log(`Using AuthType: ${authType} with resolver: ${resolver.name}`)
 

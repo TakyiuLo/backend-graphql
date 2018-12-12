@@ -13,6 +13,6 @@ type Query {
 
 type Mutation {
   createBook(title: String!, author: String!): Book!
-  updateBook(id: ID!, title: String, author: String): Book
+  updateBook(id: ID!, title: String, author: String): Book!
   deleteBook(id: ID!): Response!
 }

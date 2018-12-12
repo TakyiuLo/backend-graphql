@@ -1,0 +1,19 @@
+# import Response from 'response.graphql'
+
+type Example {
+  id: ID!
+  title: String!
+  text: String!
+  owner: ID!
+}
+
+type Query {
+  examples(title: String, text: String): [Example!]!
+  example(id: ID!): Example!
+}
+
+type Mutation {
+  createExample(title: String!, text: String!): Example!
+  updateExample(id: ID!, title: String, text: String): Example!
+  deleteExample(id: ID!): Response!
+}
