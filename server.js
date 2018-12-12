@@ -1,12 +1,6 @@
+// Apollo server with the entire schema
 const { ApolloServer } = require('apollo-server-express')
-
 const schema = require('./app/routes/graphql/schema')
-
-// this will auto make a path to /graphql
-const server = new ApolloServer({
-  schema,
-  path: '/graphql'
-})
 
 // require necessary NPM packages
 const express = require('express')
@@ -48,9 +42,6 @@ mongoose.connect(db, {
 // instantiate express application object
 const app = express()
 
-// ApolloServer
-server.applyMiddleware({ app })
-
 // set CORS headers on response from this API using the `cors` NPM package
 // `CLIENT_ORIGIN` is an environment variable that will be set on Heroku
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:7165' }))
@@ -84,6 +75,26 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // register route files
 app.use(exampleRoutes)
 app.use(userRoutes)
+
+// APOLLO SERVER HERE
+// this will auto make a route to /graphql
+// context: it can be api_keys, secrets, database, authentication
+const server = new ApolloServer({
+  schema,
+  // context: {
+  //   db: mongoose.connect(db, {
+  //     useMongoClient: true
+  //   })
+  // },
+  context: ({ req }) => {
+    // - If you use passport, you will need to use another route to authenticate
+    // user and pass the user to /graphql
+    return req
+  },
+  path: '/graphql'
+})
+// apply ApolloServer as middleware
+server.applyMiddleware({ app })
 
 // run API on designated port (4741 in this case)
 app.listen(port, () => {

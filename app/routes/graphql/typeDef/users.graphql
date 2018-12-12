@@ -1,0 +1,29 @@
+# import Response from 'response.graphql'
+
+type User {
+  email: String!
+  hashedPassword: String!
+  token: String
+}
+
+type SignUpPayload {
+  id: String!
+  email: String!
+}
+
+type SignInPayload {
+  id: String!
+  email: String!
+  token: String!
+}
+
+type Query {
+  users(email: String, id: String): [User!]!
+}
+
+type Mutation {
+  signUp(email: String!, password: String!, password_confirmation: String!): SignUpPayload!
+  signIn(email: String!, password: String!): SignInPayload!
+  changePassword(old: String!, new: String!): Response!
+  signOut: Response!
+}

@@ -1,8 +1,8 @@
 /*
  * replaceID
- *   #function: replace id to _id
+ *   #function: replace id to _id or _id to id
  *   @params: args
- *   @returns: a new object with replaced _id
+ *   @returns: a new object with replaced <id>
  */
 
 function replaceID (args) {
@@ -11,6 +11,9 @@ function replaceID (args) {
   if (args.id) {
     query._id = args.id
     delete query.id
+  } else if (args._id) {
+    query.id = args._id
+    delete query._id
   }
   return query
 }
@@ -31,7 +34,43 @@ function getFiles (pathDir, ext) {
     .filter(file => path.extname(file).toLowerCase() === ext)
 }
 
+/*
+ * pLog
+ *   #function: print out obj, use in the `.then` chain
+ *   @params: obj
+ *   @returns: obj
+ */
+function plog (obj) {
+  console.log(obj)
+  return obj
+}
+
+/*
+ * requireToken
+ *   #function: get User, and pass user into context
+ *   @params: resolver, context
+ *   @returns: return whatever the resolver returns
+ */
+const User = require('../../models/user')
+const handle = require('../../../lib/error_handler')
+const { handleUser } = require('../../../lib/custom_errors')
+
+function requireToken (resolver, [parent, args, context, info]) {
+  const req = context
+  const [authType, token] = req.headers.authorization.split(' ')
+
+  console.log(`Using AuthType: ${authType} with resolver: ${resolver.name}`)
+
+  return User.findOne({ token })
+    .then(handleUser)
+    .then(user => (context.user = user))
+    .then(() => resolver(parent, args, context, info))
+    .catch(handle)
+}
+
 module.exports = {
   replaceID,
-  getFiles
+  getFiles,
+  plog,
+  requireToken
 }
