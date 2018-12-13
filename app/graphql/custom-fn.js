@@ -51,9 +51,9 @@ function plog (obj) {
  *   @params: resolver, context
  *   @returns: return whatever the resolver returns
  */
-const User = require('../../models/user')
-const handle = require('../../../lib/error_handler')
-const { handleUser, BadParamsError } = require('../../../lib/custom_errors')
+const User = require('../models/user')
+const handle = require('../../lib/error_handler')
+const { handleUser, BadParamsError } = require('../../lib/custom_errors')
 
 function requireToken (resolver, [parent, args, context, info]) {
   const req = context

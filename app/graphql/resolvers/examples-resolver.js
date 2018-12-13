@@ -1,13 +1,13 @@
 // pull in Mongoose model for examples
-const Example = require('../../../models/example')
+const Example = require('../../models/example')
 
 // we'll use this to intercept any errors that get thrown and send them
 // back to the client with the appropriate status code
-const handle = require('../../../../lib/error_handler')
+const handle = require('../../../lib/error_handler')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
-const customErrors = require('../../../../lib/custom_errors')
+const customErrors = require('../../../lib/custom_errors')
 
 // we'll use this function to send 404 when non-existant document is requested
 const handle404 = customErrors.handle404

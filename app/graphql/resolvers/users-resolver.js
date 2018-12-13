@@ -1,8 +1,8 @@
-const User = require('../../../models/user')
+const User = require('../../models/user')
 
 // custom errors and handler
-const handle = require('../../../../lib/error_handler')
-const { BadParamsError } = require('../../../../lib/custom_errors')
+const handle = require('../../../lib/error_handler')
+const { BadParamsError } = require('../../../lib/custom_errors')
 
 // jsonwebtoken docs: https://github.com/auth0/node-jsonwebtoken
 const crypto = require('crypto')
