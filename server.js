@@ -1,6 +1,6 @@
 // Apollo server with the entire schema
 const { ApolloServer } = require('apollo-server-express')
-const schema = require('./app/routes/graphql/schema')
+const schema = require('./app/graphql/schema')
 
 // require necessary NPM packages
 const express = require('express')

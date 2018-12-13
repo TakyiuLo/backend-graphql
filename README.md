@@ -13,8 +13,8 @@ It used:
 3. implement examples `books` and `recipes` models
 4. Understand how authentication/authorization works in GraphQL
 5. Implement Auth
-6. Maybe implement Prisma for more functionality in terms of data monitoring. 
-  - (Might need to learn TypeScripts for Prisma.)
+6. Maybe implement Prisma for more functionality in auto generator. (Might need 
+   to learn TypeScripts for Prisma.) **No need for prisma auto**
 
 ##### Explanations:
 From my understanding,
@@ -32,7 +32,7 @@ From my understanding,
   can be merge.
 
 ##### To Build:
-1. build Mongo models (if required)
-2. build types for GraphQL
-3. build resolvers (if required: Query, Mutation)
-4. merge schemas (if required)
+1. build Mongo models
+2. build typeDefs for GraphQL
+3. build resolvers
+4. merge schemas
