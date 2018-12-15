@@ -18,7 +18,7 @@ const { replaceID, requireToken } = require('../custom-fn')
 // SIGN UP
 // CREATE
 function signUp (parent, args, context, info) {
-  const credentials = args
+  const { credentials } = args
 
   // start a promise chain, so that any errors will pass to `handle`
   return Promise.resolve(credentials)
@@ -53,7 +53,7 @@ function signUp (parent, args, context, info) {
 // SIGN IN
 // SHOW
 function signIn (parent, args, context, info) {
-  const credentials = args
+  const { credentials } = args
   const pw = credentials.password
   let user
 
@@ -89,25 +89,25 @@ function signIn (parent, args, context, info) {
 
 function changePassword (parent, args, context, info) {
   const req = context
-
+  const { passwords } = args
   let user
   // `req.user` will be determined by decoding the token payload
   return User.findById(req.user.id)
     // save user outside the promise chain
     .then(record => { user = record })
     // check that the old password is correct
-    .then(() => bcrypt.compare(args.old, user.hashedPassword))
+    .then(() => bcrypt.compare(passwords.old, user.hashedPassword))
     // `correctPassword` will be true if hashing the old password ends up the
     // same as `user.hashedPassword`
     .then(correctPassword => {
       // throw an error if the new password is missing, an empty string,
       // or the old password was wrong
-      if (!args.new || !correctPassword) {
+      if (!passwords.new || !correctPassword) {
         throw new BadParamsError()
       }
     })
     // hash the new password
-    .then(() => bcrypt.hash(args.new, bcryptSaltRounds))
+    .then(() => bcrypt.hash(passwords.new, bcryptSaltRounds))
     .then(hash => {
       // set and save the new hashed password in the DB
       user.hashedPassword = hash

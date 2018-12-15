@@ -6,6 +6,22 @@ type User {
   token: String
 }
 
+input SignUpInput {
+  email: String!
+  password: String!
+  password_confirmation: String!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+input changePasswordInput {
+  old: String!
+  new: String!
+}
+
 type SignUpPayload {
   id: String!
   email: String!
@@ -22,8 +38,11 @@ type Query {
 }
 
 type Mutation {
-  signUp(email: String!, password: String!, password_confirmation: String!): SignUpPayload!
-  signIn(email: String!, password: String!): SignInPayload!
-  changePassword(old: String!, new: String!): Response!
+  signUp(credentials: SignUpInput): SignUpPayload!
+  # signUp(email: String!, password: String!, password_confirmation: String!): SignUpPayload!
+  signIn(credentials: SignInInput): SignInPayload!
+  # signIn(email: String!, password: String!): SignInPayload!
+  changePassword(passwords: changePasswordInput): Response!
+  # changePassword(old: String!, new: String!): Response!
   signOut: Response!
 }
