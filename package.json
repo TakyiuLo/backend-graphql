@@ -15,6 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server-express": "^2.2.4",
+    "bcrypt": "^3.0.2",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",
@@ -30,7 +32,6 @@
     "prisma": "^1.22.1"
   },
   "devDependencies": {
-    "bcrypt": "^3.0.2",
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
     "eslint": "^4.8.0",
