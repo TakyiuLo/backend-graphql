@@ -17,7 +17,7 @@ input SignInInput {
   password: String!
 }
 
-input changePasswordInput {
+input ChangePasswordInput {
   old: String!
   new: String!
 }
@@ -42,7 +42,7 @@ type Mutation {
   # signUp(email: String!, password: String!, password_confirmation: String!): SignUpPayload!
   signIn(credentials: SignInInput): SignInPayload!
   # signIn(email: String!, password: String!): SignInPayload!
-  changePassword(passwords: changePasswordInput): Response!
+  changePassword(passwords: ChangePasswordInput): Response!
   # changePassword(old: String!, new: String!): Response!
   signOut: Response!
 }
