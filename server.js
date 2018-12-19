@@ -80,6 +80,9 @@ app.use(userRoutes)
 // this will auto make a route to /graphql
 // context: it can be api_keys, secrets, database, authentication
 const server = new ApolloServer({
+  // enable playground and introspection if necessary
+  // introspection: true,
+  // playground: true,
   schema,
   // context: {
   //   db: mongoose.connect(db, {
@@ -92,6 +95,7 @@ const server = new ApolloServer({
     return req
   },
   path: '/graphql'
+
 })
 // apply ApolloServer as middleware
 server.applyMiddleware({ app })
