@@ -7,13 +7,37 @@ type Example {
   owner: ID!
 }
 
+input examplesInput {
+  title: String
+  text: String
+}
+
+input exampleInput {
+  id: ID!
+}
+
 type Query {
-  examples(title: String, text: String): [Example!]!
-  example(id: ID!): Example!
+  examples(where: examplesInput): [Example!]!
+  example(where: exampleInput): Example!
+}
+
+input createExampleInput {
+  title: String!
+  text: String!
+}
+
+input updateExampleInput {
+  id: ID!
+  title: String
+  text: String
+}
+
+input deleteExampleInput {
+  id: ID!
 }
 
 type Mutation {
-  createExample(title: String!, text: String!): Example!
-  updateExample(id: ID!, title: String, text: String): Example!
-  deleteExample(id: ID!): Response!
+  createExample(example: createExampleInput): Example!
+  updateExample(example: updateExampleInput): Example!
+  deleteExample(example: deleteExampleInput): Response!
 }

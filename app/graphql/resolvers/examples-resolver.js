@@ -19,47 +19,55 @@ const { replaceID, requireToken } = require('../custom-fn')
 
 // INDEX
 function getExamples (parent, args, context, info) {
-  return Example.find()
-    .then(examples => {
-      // `examples` will be an array of Mongoose documents
-      // we want to convert each one to a POJO, so we use `.map` to
-      // apply `.toObject` to each one
-      return examples.map(example => replaceID(example.toObject()))
-    })
-    // stringify object for graphql due to type ID vs objectID
-    .then(examples => JSON.parse(JSON.stringify(examples)))
-    // if an error occurs, pass it to the handler
-    .catch(handle)
+  return (
+    Example.find(args.where)
+      .then(examples => {
+        // `examples` will be an array of Mongoose documents
+        // we want to convert each one to a POJO, so we use `.map` to
+        // apply `.toObject` to each one
+        return examples.map(example => replaceID(example.toObject()))
+      })
+      // stringify object for graphql due to type ID vs objectID
+      .then(examples => JSON.parse(JSON.stringify(examples)))
+      // if an error occurs, pass it to the handler
+      .catch(handle)
+  )
 }
 
 // SHOW
 function getExample (parent, args, context, info) {
-  return Example.findById(args.id)
-    .then(handle404)
-    .then(example => example.toObject())
-    // replace _id to id
-    .then(replaceID)
-    .catch(handle)
+  return (
+    Example.findById(args.where.id)
+      .then(handle404)
+      .then(example => example.toObject())
+      // replace _id to id
+      .then(replaceID)
+      // need this to turn id(NOT string) to type string
+      .then(res => JSON.parse(JSON.stringify(res)))
+      .catch(handle)
+  )
 }
 
 // CREATE
 function createExample (parent, args, context, info) {
   const req = context
-
+  const { example } = args
   // set owner of new example to be current user
-  args.owner = req.user._id.toString()
+  example.owner = req.user._id.toString()
 
-  return Example.create(args)
-    // respond to succesful `create` with status 201 and JSON of new "example"
-    .then(example => example.toObject())
-    // stringify object for graphql due to type ID vs objectID
-    .then(example => JSON.parse(JSON.stringify(example)))
-    // replace _id to id
-    .then(replaceID)
-    // if an error occurs, pass it off to our error handler
-    // the error handler needs the error message and the `res` object so that it
-    // can send an error message back to the client
-    .catch(handle)
+  return (
+    Example.create(example)
+      // respond to succesful `create` with status 201 and JSON of new "example"
+      .then(example => example.toObject())
+      // stringify object for graphql due to type ID vs objectID
+      .then(example => JSON.parse(JSON.stringify(example)))
+      // replace _id to id
+      .then(replaceID)
+      // if an error occurs, pass it off to our error handler
+      // the error handler needs the error message and the `res` object so that it
+      // can send an error message back to the client
+      .catch(handle)
+  )
 }
 
 // UPDATE
@@ -69,52 +77,56 @@ function updateExample (parent, args, context, info) {
   // delete req.body.example.owner
   const req = context
 
-  return Example.findById(args.id)
-    .then(handle404)
-    .then(example => {
-      // pass the `req` object and the Mongoose record to `requireOwnership`
-      // it will throw an error if the current user isn't the owner
-      requireOwnership(req, example)
+  return (
+    Example.findById(args.example.id)
+      .then(handle404)
+      .then(example => {
+        // pass the `req` object and the Mongoose record to `requireOwnership`
+        // it will throw an error if the current user isn't the owner
+        requireOwnership(req, example)
 
-      // the client will often send empty strings for parameters that it does
-      // not want to update. We delete any key/value pair where the value is
-      // an empty string before updating
-      Object.keys(args).forEach(key => {
-        if (args[key] === '') {
-          delete args[key]
-        }
+        // the client will often send empty strings for parameters that it does
+        // not want to update. We delete any key/value pair where the value is
+        // an empty string before updating
+        Object.keys(args.example).forEach(key => {
+          if (args.example[key] === '') {
+            delete args.example[key]
+          }
+        })
+
+        // pass the result of Mongoose's `.update` to the next `.then`
+        return example.update(args.example)
       })
-
-      // pass the result of Mongoose's `.update` to the next `.then`
-      return example.update(args)
-    })
-    // if that succeeded, return 200 and JSON
-    .then(() => Example.findById(args.id))
-    .then(examples => JSON.parse(JSON.stringify(examples)))
-    .then(replaceID)
-    // if an error occurs, pass it to the handler
-    .catch(handle)
+      // if that succeeded, return 200 and JSON
+      .then(() => Example.findById(args.example.id))
+      .then(example => JSON.parse(JSON.stringify(example)))
+      .then(replaceID)
+      // if an error occurs, pass it to the handler
+      .catch(handle)
+  )
 }
 
 // DESTROY
 function deleteExample (parent, args, context, info) {
   const req = context
 
-  return Example.findById(args.id)
-    .then(handle404)
-    .then(example => {
-      // throw an error if current user doesn't own `example`
-      requireOwnership(req, example)
-      // delete the example ONLY IF the above didn't throw
-      example.remove()
-    })
-    // send back 204 and no content if the deletion succeeded
-    .then(() => ({
-      status: '204',
-      message: 'Successfully Deleted'
-    }))
-    // if an error occurs, pass it to the handler
-    .catch(handle)
+  return (
+    Example.findById(args.example.id)
+      .then(handle404)
+      .then(example => {
+        // throw an error if current user doesn't own `example`
+        requireOwnership(req, example)
+        // delete the example ONLY IF the above didn't throw
+        example.remove()
+      })
+      // send back 204 and no content if the deletion succeeded
+      .then(() => ({
+        status: '204',
+        message: 'Successfully Deleted'
+      }))
+      // if an error occurs, pass it to the handler
+      .catch(handle)
+  )
 }
 
 const examplesResolver = {

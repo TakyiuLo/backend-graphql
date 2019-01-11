@@ -15,6 +15,7 @@ It used:
 5. Implement Auth
 6. Maybe implement Prisma for more functionality in auto generator. (Might need 
    to learn TypeScripts for Prisma.) **No need for prisma auto**
+   Prisma server currently only have PSQL, maybe later I'll implement this
 
 ##### Explanations:
 From my understanding,
